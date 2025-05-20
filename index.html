@@ -18,17 +18,20 @@
 
   <script>
     async function onChallengeSuccess(token) {
+      // Only called *after* a successful pass, so safe to hide
+      document.getElementById('turnstile-box').style.display = 'none';
+    
       const r = await fetch('https://intercoskr-email-unlocker.stefano-rivera.workers.dev/', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ turnstileToken: token })
       });
-
+    
       if (!r.ok) {
         document.getElementById('emails').innerText = "Verification failed.";
         return;
       }
-
+    
       const { addr1, addr2 } = await r.json();
       document.getElementById('emails').innerHTML = `
         <a href="mailto:${addr1}">${addr1}</a><br>
