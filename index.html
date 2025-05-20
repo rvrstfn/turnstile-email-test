@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Protected Email Access</title>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</head>
+<body>
+  <h1>Access our email addresses</h1>
+
+  <div class="cf-turnstile"
+       data-sitekey="PASTE_YOUR_SITE_KEY_HERE"
+       data-callback="onChallengeSuccess"
+       data-action="email-reveal">
+  </div>
+
+  <div id="emails" style="margin-top:1rem;"></div>
+
+  <script>
+    async function onChallengeSuccess(token) {
+      const r = await fetch('https://your-worker-subdomain.workers.dev', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ turnstileToken: token })
+      });
+
+      if (!r.ok) {
+        document.getElementById('emails').innerText = "Verification failed.";
+        return;
+      }
+
+      const { addr1, addr2 } = await r.json();
+      document.getElementById('emails').innerHTML = `
+        <a href="mailto:${addr1}">${addr1}</a><br>
+        <a href="mailto:${addr2}">${addr2}</a>
+      `;
+    }
+  </script>
+</body>
+</html>
