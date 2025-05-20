@@ -18,7 +18,7 @@
 
   <script>
     async function onChallengeSuccess(token) {
-      const r = await fetch('https://your-worker-subdomain.workers.dev', {
+      const r = await fetch('https://intercoskr-email-unlocker.stefano-rivera.workers.dev/', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ turnstileToken: token })
